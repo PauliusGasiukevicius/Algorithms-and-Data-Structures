@@ -1,7 +1,7 @@
 /* 
 * Here`s V - adj list represented graph, all other arrays are initially all 0 | empty
 * if graph is not connected you need to call this for each connected subgraph separately
-* All sBridges of current Subgraph are in bridges array after execution
+* All Bridges of current Subgraph are in bridges array after execution
 * IF there`s a bridge between nodes u and v it`s stored as minIndex(u,v) and maxIndex(u,v) pair
 */
 
