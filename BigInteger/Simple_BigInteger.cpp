@@ -1,3 +1,8 @@
+/*
+This this was university exercise and it`s buggy & slow, so for contests I should better use
+https://github.com/indy256/codelibrary/blob/master/cpp/bigint.cpp
+/*
+
 #include <bits/stdc++.h>
 using namespace std;
 
