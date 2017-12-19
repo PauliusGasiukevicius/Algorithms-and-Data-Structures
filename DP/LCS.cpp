@@ -4,6 +4,7 @@ using namespace std;
 int DP[5001][5001];
 /*
 * min number of insertions to make string a palindrome = string size - LCS of string and its reverse
+* Longest repeatings subsequence is LCS on string with itself with extra condition that i!=j
 */
 int main()
 {
