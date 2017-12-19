@@ -17,5 +17,5 @@ int main()
         DP[i][j]=DP[i-1][j-1] + 1;
     else DP[i][j] = max(DP[i-1][j],DP[i][j-1]);
 
-    cout<<n - DP[s.size()][r.size()]<<"\n";
+    cout<<DP[s.size()][r.size()]<<"\n";
 }
