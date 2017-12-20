@@ -4,19 +4,27 @@ using namespace std;
 int main()
 {
     ios::sync_with_stdio(0);
+    int t;
+    cin>>t;
+    while(t--)
+    {
     int n,m;
     cin>>n>>m;
-    int u[10001], v[10001], w[10001];
-    vector<int>SP(n+1,666666666);
-    SP[1]=0;
+    vector<int>dist(n,666666);
+    vector<int>prev(n,-1);
+    int from[2001], to[2001], w[2001];
+
     for(int i=0; i<m; i++)
-        cin>>u[i]>>v[i]>>w[i];
+        cin>>from[i]>>to[i]>>w[i];
 
-    for(int i=0; i<n; i++)
-        for(int j=0; j<m; j++)
-            if(SP[u[j]] + w[j] < SP[v[j]])
-            SP[v[j]]=SP[u[j]]+w[j];
-
+    dist[0]=0;
+    int lastUpdate = 0;
     for(int i=1; i<=n; i++)
-        cout<<min(SP[i],30000)<<" ";
+    for(int j=0; j<m; j++)
+        if(dist[from[j]] + w[j] < dist[to[j]])
+            dist[to[j]]=dist[from[j]]+w[j], prev[to[j]]=from[j],lastUpdate=i;
+
+cout<<(lastUpdate==n?"negative cycle exists\n":"there`s no negative cycle\n");
+    }
+
 }
