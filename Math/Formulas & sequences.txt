@@ -1,0 +1,1 @@
+SPOJ TRICOUNT:   n(n+2)(2n+1)/8
