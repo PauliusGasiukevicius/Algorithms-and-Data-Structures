@@ -1,7 +1,17 @@
 #include <bits/stdc++.h>
 using namespace std;
 #define ll long long
+/*LCA with root queries trick
 
+Let LCA(u, v, w) be the LCA of v and w with respect to root u. To compute LCA(u, v, w), we can compute, for any fixed r,
+
+LCA(r, u, v)
+LCA(r, u, w)
+LCA(r, v, w)
+
+and take the "odd man out", i.e., if two are equal and the third is different, then take the third, else they're all equal, so take that node.
+
+*/
 void dfs(int c,int p, vector<int>&euler,vector<int>&first, vector<int>T[])
 {
     euler.push_back(c);
