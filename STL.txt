@@ -1,0 +1,14 @@
+custom set comparators:
+
+struct comp
+{
+    bool operator() (const double& a, const double& b)
+    const
+    {
+        return b - a > 1e-7;
+    }
+};
+
+set<double,comp>S;
+
+why to use? - custom sorting in set, default double comparator has low precision for some reason
