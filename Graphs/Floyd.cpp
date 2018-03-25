@@ -1,8 +1,9 @@
-//Basic floyd for APSP 
+//Basic floyd for APSP + P matrix to track where to next when going from [i] to [j]
 for(int k=0; k<n; k++)
-        for(int i=0; i<n; i++)
-            for(int j=0; j<n; j++)
-                G[i][j]=min(G[i][j],G[i][k]+G[k][j]);
+            for(int i=0; i<n; i++)
+                for(int j=0; j<n; j++)
+                if(M[i][k] + M[k][j] < M[i][j])
+                M[i][j]=M[i][k]+M[k][j],P[i][j]=P[i][k];
 
 //Counting paths fom all pairs of nodes
         for(int k=0; k<=n; k++)
