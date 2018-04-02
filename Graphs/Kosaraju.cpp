@@ -10,14 +10,6 @@ void dfs(vector<int>G[], int c, vector<int>&A, vector<int>&visited)
     A.push_back(c);
 }
 
-void dfs2(vector<int>G[], int c, vector<int>&A, vector<int>&visited)
-{
-    visited[c]=1;
-    for(auto&u:G[c])
-        if(!visited[u])dfs(G,u,A,visited);
-    A.push_back(c);
-}
-
 int main()
 {
     ios::sync_with_stdio(0);
