@@ -1,5 +1,6 @@
 ll C[1001][1001];
 
+//Catalan(n) = 1/(n+1) * binom(2*n,n);
 ll binom(int n, int k)
 {
     if(k==0 || n==k)return C[n][k] = 1;
