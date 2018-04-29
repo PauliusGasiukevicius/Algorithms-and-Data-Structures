@@ -1,6 +1,6 @@
 /*
 This this was university exercise and it`s buggy & slow, so for contests I should better use
-https://github.com/indy256/codelibrary/blob/master/cpp/bigint.cpp
+https://gist.github.com/ar-pa/957297fb3f88996ead11
 /*
 
 #include <bits/stdc++.h>
