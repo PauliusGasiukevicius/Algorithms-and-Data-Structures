@@ -2,6 +2,15 @@
 using namespace std;
 #define ll long long
 
+/* Sample problem from USACO
+If we need to find minimum amount of edges we need to add to make graph strongly connected:
+Find all SCC
+Build SCC graph
+if graph is already SC answer is 0
+else answer is max(|numer of nodes with in-degree of 0 in SCC graph|,|numer of nodes with out-degree of 0 in SCC graph|);
+*/
+
+//Here`s below simple implementation, solution to UVA dominoes
 void dfs(vector<int>G[], int c, vector<int>&A, vector<int>&visited)
 {
     visited[c]=1;
