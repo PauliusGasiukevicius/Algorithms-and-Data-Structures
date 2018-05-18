@@ -24,6 +24,9 @@ void dfs(int c,int p, vector<int>&euler,vector<int>&first, vector<int>T[])
             euler.push_back(c);//cause we will reach this node after climbing the tree
         }
 }
+//*********************************************************************************
+//This part below is wrong, instead of using node id for comparision, i should be using node depth from root!!!!!
+//*********************************************************************************
 
 void build(int seg[], int c, int l, int r, vector<int>&euler)
 {
