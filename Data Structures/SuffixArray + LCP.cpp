@@ -5,8 +5,8 @@ using namespace std;
 #define oo 666666666
 
 vector<int> buildSA(string s)
-{
-    s+="$"; //it uses modulo tricks for easier implementation so this addition is necessary
+{//it uses modulo tricks for easier implementation so this addition to string end is necessary
+    s+=((char)1); //BTW it should be < than all alphabet characters
     int n = s.size();
     vector<int>r(n),sa(n);//rank and suffix array
 
@@ -15,7 +15,8 @@ vector<int> buildSA(string s)
 
     for(int k=0; k<n; k=(k>0 ? 2*k : 1))
     {
-        stable_sort(sa.begin(),sa.end(),[&](int i, int j)
+        cout<<k<<endl;
+        sort(sa.begin(),sa.end(),[&](int i, int j)
              {
                  return (r[i]!=r[j] ? r[i] < r[j] : r[(i+k)%n] < r[(j+k)%n]);
              });
@@ -51,13 +52,38 @@ vector<int> kasai(string s, vector<int> sa)
     return lcp;
 }
 
+vector<int> suffix_array(string s)
+{
+    s+=(char)1;
+    int n = s.size(), N = n + 256;
+    vector<int> sa(n), ra(n);
+    for(int i = 0; i < n; i++) sa[i] = i, ra[i] = s[i];
+    for(int k = 0; k < n; k ? k *= 2 : k++)
+    {
+        cout<<k<<endl;
+        vector<int> nsa(sa), nra(n), cnt(N);
+        for(int i = 0; i < n; i++) nsa[i] = (nsa[i] - k + n) % n;
+        for(int i = 0; i < n; i++) cnt[ra[i]]++;
+        for(int i = 1; i < N; i++) cnt[i] += cnt[i - 1];
+        for(int i = n - 1; i >= 0; i--) sa[--cnt[ra[nsa[i]]]] = nsa[i];
+
+        int r = 0;
+        for(int i = 1; i < n; i++)
+        {
+            if(ra[sa[i]] != ra[sa[i - 1]]) r++;
+            else if(ra[(sa[i] + k) % n] != ra[(sa[i - 1] + k) % n]) r++;
+            nra[sa[i]] = r;
+        }
+        ra = nra;
+    }
+    sa.erase(sa.begin());
+    return sa;
+}
+
 int main()
 {
     ios::sync_with_stdio(0);
     string s;
     cin>>s;
-
-   auto sa = buildSA(s);
-    for(int&x:sa)
-        cout<<x<<"\n";
+    auto sa = suffix_array(s);
 }
