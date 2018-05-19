@@ -15,7 +15,6 @@ vector<int> buildSA(string s)
 
     for(int k=0; k<n; k=(k>0 ? 2*k : 1))
     {
-        cout<<k<<endl;
         sort(sa.begin(),sa.end(),[&](int i, int j)
              {
                  return (r[i]!=r[j] ? r[i] < r[j] : r[(i+k)%n] < r[(j+k)%n]);
@@ -60,7 +59,6 @@ vector<int> suffix_array(string s)
     for(int i = 0; i < n; i++) sa[i] = i, ra[i] = s[i];
     for(int k = 0; k < n; k ? k *= 2 : k++)
     {
-        cout<<k<<endl;
         vector<int> nsa(sa), nra(n), cnt(N);
         for(int i = 0; i < n; i++) nsa[i] = (nsa[i] - k + n) % n;
         for(int i = 0; i < n; i++) cnt[ra[i]]++;
