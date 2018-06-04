@@ -51,7 +51,7 @@ vector<int> kasai(string s, vector<int> sa)
     return lcp;
 }
 
-vector<int> suffix_array(string s)
+vector<int> suffix_array(string s)//this uses RadixSort so it`s faster O(nlogn)
 {
     s+=(char)1;
     int n = s.size(), N = n + 256;
@@ -76,6 +76,17 @@ vector<int> suffix_array(string s)
     }
     sa.erase(sa.begin());
     return sa;
+}
+
+int distinctSubstringsCount(string& s)
+{
+        auto sa = buildSA(s);
+        auto lcp = kasai(s,sa);
+        int n = s.size();
+        int ats = n-sa[0];
+        for(int i=1; i<s.size(); i++)
+            ats+= n-sa[i] - lcp[i-1];
+    return ats;
 }
 
 int main()
