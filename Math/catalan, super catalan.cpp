@@ -33,3 +33,17 @@ int main()
     while(cin>>n)
         cout<<SuperCatalan(n)-Catalan(n-1)<<"\n";
 }
+
+/*SPOJ FUNPROB
+
+        n-10$ ppl, m-5$ ppl
+        we can realize correct arrangements as paths on a n x m grid not crossing diagonal
+        number of total paths in n x m grid = C(m,n+m)
+        number of paths crossing diagonal = C(m+1,m+1+n-1)=C(m+1,m+n)
+        Probability that random arrangement is valid = (C(m,n+m)-C(m+1,n+m))/C(m,n+m)
+        We can simplify that using algebra to (m+1-n)/(m+1)
+        of course we need to avoid the case where m<n cause thats impossible
+
+        if(m<n)cout<<"0.000000\n";
+        elsecout<<setprecision(6)<<fixed<<(m+1.0-n)/(m+1.0)<<"\n";
+*/
