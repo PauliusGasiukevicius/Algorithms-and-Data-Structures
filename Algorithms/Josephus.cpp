@@ -4,11 +4,19 @@ using namespace std;
 #define ld long double
 #define oo 666666666
 
-int josephus(int n, int k)
+int josephus(int n, int k) //standart problem when we always remove every k-th person
 {
     int ats = 0;
     for(int i=1; i<=n; i++)
         ats=(ats+k)%i;
+    return ats+1;
+}
+
+int josephusW(int n, vector<int>&K)//modified, now we will remove K[0]-thperson first, then K[1]-th...
+{
+    int ats = 0;
+    for(int i=1; i<=n; i++)
+        ats = (ats + K[n-i])%i;
     return ats+1;
 }
 
