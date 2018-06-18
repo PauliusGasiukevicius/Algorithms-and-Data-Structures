@@ -12,6 +12,11 @@ int josephus(int n, int k) //standart problem when we always remove every k-th p
     return ats+1;
 }
 
+int josephus2(int n)
+{
+    return 2*(n-pow(2,floor(log2(n))))+1;
+}
+
 int josephusW(int n, vector<int>&K)//modified, now we will remove K[0]-thperson first, then K[1]-th...
 {
     int ats = 0;
