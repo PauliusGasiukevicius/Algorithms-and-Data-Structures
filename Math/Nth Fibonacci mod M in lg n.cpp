@@ -2,24 +2,34 @@
 using namespace std;
 #define ll long long
 
-vector<vector<ll>> matrixMul(vector<vector<ll>>A, vector<vector<ll>>B, ll M)
+ll tmp[2][2];
+
+void matrixMul(vector<vector<ll>>&A, vector<vector<ll>>B, ll M)
 {
-    vector<vector<ll>>ans(A.size(),vector<ll>(B[0].size(),0));
-
-        for(int i=0; i<A.size(); i++)
-        for(int j=0; j<B.size(); j++)
-        for(int k=0; k<A[0].size(); k++)
-        ans[i][j] = (ans[i][j] + A[i][k]*B[k][j])%M;
-
-    return ans;
+        tmp[0][0] = (A[0][0]*B[0][0] + A[0][1] * B[1][0])%M;
+        tmp[0][1] = (A[0][0]*B[0][1] + A[0][1] * B[1][1])%M;
+        tmp[1][0] = (A[1][0]*B[0][0] + A[1][1] * B[1][0])%M;
+        tmp[1][1] = (A[1][0]*B[0][1] + A[1][1] * B[1][1])%M;
+        A[0][0]=tmp[0][0];
+        A[0][1]=tmp[0][1];
+        A[1][0]=tmp[1][0];
+        A[1][1]=tmp[1][1];
 }
 
 vector<vector<ll>> matrixPow(vector<vector<ll>>A, ll k, ll M)
 {
     if(k==1)return A;
 
-    if(k&1)return matrixMul(A,matrixPow(A,k-1,M),M);
-    return matrixPow(matrixMul(A,A,M),k/2,M);
+    if(k&1)
+    {
+        matrixMul(A,matrixPow(A,k-1,M),M);
+        return A;
+    }
+    else
+    {
+        matrixMul(A,A,M);
+        return matrixPow(A,k/2,M);
+    }
 }
 
 ll Fib(ll n, ll M)
