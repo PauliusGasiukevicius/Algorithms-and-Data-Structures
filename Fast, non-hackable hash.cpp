@@ -8,10 +8,17 @@ using namespace std;
 
 const int RANDOM = chrono::high_resolution_clock::now().time_since_epoch().count();
 struct chash {
-    int operator()(int x) const { return hash<int>{}(x ^ RANDOM); }
+    int operator()(int x) const { return hash<int>{}(x ^ RANDOM); } //example of custom hash function
+};
+struct pair_hash { 
+    template <class T1, class T2>
+    std::size_t operator () (const std::pair<T1,T2> &p) const {
+        auto h1 = std::hash<ll>{}((p.first<<31LL) | p.second);
+        return h1 ^ RANDOM;
+    }
 };
 gp_hash_table<int, string, chash> mp;
-
+//theres also cc_hash_table and unordered_map, sometimes work better for some kinds of problems
 
 int main()
 {
