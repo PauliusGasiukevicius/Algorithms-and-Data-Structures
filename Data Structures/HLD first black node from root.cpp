@@ -6,108 +6,111 @@ using namespace std;
 
 const int N = 100001;
 vector<int>G[N];
-int chain[N],head[N],segID[N],seg[4*N],depth[N],sz[N],P[N],node[N];
-int nxt = 1, nxtChain=1, n;
+int P[N], ID[N], sz[N], head[N], D[N], seg[4*N], node[N];
+int nxt = 0, n;
 
-int dfs(int c, int p)
+void dfs(int c, int p = 0)
 {
-    sz[c]=1;
+    D[c]=D[p]+1;
     P[c]=p;
-    depth[c]=depth[p]+1;
-
+    sz[c]=1;
     for(auto&u : G[c])
         if(u!=p)
-            sz[c]+=dfs(u,c);
-
-    return sz[c];
+    {
+        dfs(u,c);
+        sz[c]+=sz[u];
+    }
 }
 
-void HLD(int c, int chainID)
+void HLD(int c, int p = -1, bool newChain = false)
 {
-    segID[c]=nxt++;
-    node[nxt-1]=c;
-    if(chainID < 0)chainID=nxtChain++,head[chainID]=c;
-    chain[c]=chainID;
+    ID[c]=++nxt;
+    node[nxt]=c;
+    head[c] = (newChain ? c : head[p]);
 
-    if(G[c].empty() || G[c].size()==1 && G[c][0]==P[c])return;
+    int heavy = -1;
+    for(auto&u : G[c])
+        if(u!=p && (heavy==-1 || sz[heavy] < sz[u]))
+        heavy = u;
 
-    int mx = (G[c][0]==P[c] ? G[c][1] : G[c][0]);
+    if(heavy==-1)return;
+
+    HLD(heavy,c);
 
     for(auto&u : G[c])
-        if(u!=P[c] && sz[u] > sz[mx])
-        mx=u;
-
-    HLD(mx,chainID);
-
-    for(auto&u : G[c])
-        if(u!=mx && u!=P[c])
-        HLD(u,-1);
+        if(u!=p && u!=heavy)
+        HLD(u,c,1);
 }
 
-void update(int c, int l, int r, int pos)
+void build(int c, int l, int r)
 {
     if(l==r)
     {
-        seg[c] = (seg[c]==oo ? r : oo);
+        seg[c]=oo;
         return;
     }
     int m = (l+r)/2;
-    if(pos<=m)
-        update(2*c,l,m,pos);
-    else
-        update(2*c+1,m+1,r,pos);
-
-    seg[c] = min(seg[2*c],seg[2*c+1]);
+    build(2*c,l,m);
+    build(2*c+1,m+1,r);
+    seg[c]=min(seg[2*c],seg[2*c+1]);
 }
 
-int RMQ(int c, int l, int r, int L, int R)
+void flip(int c, int l, int r, int pos)
 {
-    if(l>r || r<L || l>R)return oo;
+    if(l==r)
+    {
+        seg[c]=(seg[c]==oo ? r : oo);
+        return;
+    }
+    int m = (l+r)/2;
+    if(pos<=m)flip(2*c,l,m,pos);
+    else flip(2*c+1,m+1,r,pos);
+    seg[c]=min(seg[2*c],seg[2*c+1]);
+}
+
+int get(int c, int l, int r, int L, int R)
+{
+    if(l>r || l>R || r<L)return oo;
     if(l>=L && r<=R)return seg[c];
     int m = (l+r)/2;
-    return min(RMQ(2*c,l,m,L,R), RMQ(2*c+1,m+1,r,L,R));
+    return min(get(2*c,l,m,L,R),get(2*c+1,m+1,r,L,R));
 }
 
-int firstBlack(int u)
+int query(int u)
 {
     int ats = oo;
     while(u)
     {
-        ats= min(ats,RMQ(1,1,n,segID[head[chain[u]]],segID[u]));
-        u=P[head[chain[u]]];
+        ats=min(ats,get(1,1,n,ID[head[u]],ID[u]));
+        u=P[head[u]];
     }
-    return ats;
+    return (ats==oo ? -1 : node[ats]);
 }
 
 int main()
 {
-    ios::sync_with_stdio(0);
+    ios::sync_with_stdio(0);cin.tie(0);
     int q;
     cin>>n>>q;
-
-    for(int i=1,u,v; i<n; i++)
+    for(int i=1; i<n; i++)
     {
+        int u,v;
         cin>>u>>v;
         G[u].push_back(v);
         G[v].push_back(u);
     }
 
-    dfs(1,0);
-    HLD(1,-1);
-    fill(seg,seg+4*N,oo);
-
+    dfs(1);
+    HLD(1,0,1);
+    build(1,1,n);
+    D[0]=oo;
     while(q--)
     {
-        int x,y;
-        cin>>x>>y;
-        if(x)
-        {
-            int ats = firstBlack(y);
-            if(ats==oo)ats=-1;
-            else ats = node[ats];
-            cout<<ats<<"\n";
-        }
+        int tp,u;
+        cin>>tp>>u;
+        if(tp==0)
+            flip(1,1,n,ID[u]);
         else
-            update(1,1,n,segID[y]);
+            cout<<query(u)<<"\n";
     }
 }
