@@ -4,51 +4,30 @@ using namespace std;
 #define ld long double
 #define oo 666666666
 
-string minimalRotation(string s)
+int minLexCyc(string& x) //returns index of minimal string rotation, works in O(n)
 {
-    int n = s.size();
-    s+=s;
-    int have[256]={};
-    for(auto&ch:s)have[ch]++;
-    vector<int>pos;
-
-    for(int j='a'; j<='z'; j++)
-        if(have[j])
+    int i = 0, j = 1, k = 1, p = 1, a, b, l = x.size();
+    while(j+k <= (l<<1))
+    {
+        if ((a=x[(i+k-1)%l])>(b=x[(j+k-1)%l]))
         {
-            for(int i=0; i<s.size(); i++)
-                if(s[i]==j)
-                if(i==0 || s[i]!=s[i-1])pos.push_back(i);
-
-            int bestSame = 0;
-            char bestLast = 0;
-            int ats = 0;
-
-            for(auto c:pos)
-            {
-                int st = c;
-                int same = 1;
-                int last = j;
-                while(c+1 < s.size())
-                {
-                    ++c;
-                    if(s[c]==last)same++;
-                    else
-                    {
-                        last=s[c];
-                        break;
-                    }
-                }
-
-                if(bestSame < same || (bestSame==same && last < bestLast))
-                {
-                    ats=st;
-                    bestSame = same;
-                    bestLast = last;
-                }
-            }
-
-            return s.substr(ats,n);
+            i=j++;
+            k=p=1;
+        } else if (a<b)
+        {
+            j+=k;
+            k=1;
+            p=j-i;
+        } else if (a==b && k!=p)
+        {
+            k++;
+        } else
+        {
+            j+=p;
+            k=1;
         }
+    }
+    return i;
 }
 
 int main()
@@ -56,5 +35,8 @@ int main()
     ios::sync_with_stdio(0);cin.tie(0);cout.tie(0);
     string s;
     cin>>s;
-    cout<<minimalRotation(s);
+    int idx = minLexCyc(s);
+    cout<<s[idx];
+    for(int i=(idx+1)%s.size(); i!=idx; i=(i+1)%s.size())
+        cout<<s[i];
 }
