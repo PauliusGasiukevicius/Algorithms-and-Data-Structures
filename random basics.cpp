@@ -17,7 +17,7 @@ int main()
       ios::sync_with_stdio(0);cin.tie(0);
     mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
     //theres also mt19937_64 for 64 bit random integers
-    
+    int random_integer = uniform_int_distribution<int>(2, 10)(rnd); //generates random ints in range [2,10]
     vector<int> permutation(N);
 
     for (int i = 0; i < N; i++)
