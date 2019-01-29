@@ -30,7 +30,35 @@
  
     * [2SAT](https://github.com/Photon-LT/Algorithms-and-Data-Structures/tree/master/Data%20Structures/Graphs/2SAT)
   
-    * [2SAT](https://github.com/Photon-LT/Algorithms-and-Data-Structures/tree/master/Data%20Structures/Graphs/2SAT)
+    * [Articulation points  bridges](https://github.com/Photon-LT/Algorithms-and-Data-Structures/tree/master/Data%20Structures/Graphs/Articulation%20points%20%26%20bridges)
+    
+    * [BFS & DFS](https://github.com/Photon-LT/Algorithms-and-Data-Structures/tree/master/Data%20Structures/Graphs/BFS%20%26%20DFS)
+    
+    * [Bellman-Ford](https://github.com/Photon-LT/Algorithms-and-Data-Structures/tree/master/Data%20Structures/Graphs/Bellman-Ford)
+    
+    * [Bipartite-Matching and related](https://github.com/Photon-LT/Algorithms-and-Data-Structures/tree/master/Data%20Structures/Graphs/Bipartite%20matching%20%26%20related)
+    
+    * [BCC & Bridge tree](https://github.com/Photon-LT/Algorithms-and-Data-Structures/tree/master/Data%20Structures/Graphs/Bridge%20tree%20%26%20BCC%20(Bi-Connected%20Components))
+    
+    * [Dijkstra](https://github.com/Photon-LT/Algorithms-and-Data-Structures/tree/master/Data%20Structures/Graphs/Dijkstra)
+    
+    * [Euler tour & cycle](https://github.com/Photon-LT/Algorithms-and-Data-Structures/tree/master/Data%20Structures/Graphs/Euler%20Tour%20%26%20cycle)
+    
+    * [Flows](https://github.com/Photon-LT/Algorithms-and-Data-Structures/tree/master/Data%20Structures/Graphs/Flows)
+    
+    * [Floyd Warshall](https://github.com/Photon-LT/Algorithms-and-Data-Structures/tree/master/Data%20Structures/Graphs/Floyd%20warshall)
+    
+    * [MST](https://github.com/Photon-LT/Algorithms-and-Data-Structures/tree/master/Data%20Structures/Graphs/MST%20(Minimum%20Spanning%20Tree))
+    
+    * [SCC](https://github.com/Photon-LT/Algorithms-and-Data-Structures/tree/master/Data%20Structures/Graphs/SCC%20(Strongly%20Connected%20Components))
+    
+    * [SQRTD](https://github.com/Photon-LT/Algorithms-and-Data-Structures/tree/master/Data%20Structures/Graphs/SQRT%20decomposition)
+    
+    * [DAG & TopoSort](https://github.com/Photon-LT/Algorithms-and-Data-Structures/tree/master/Data%20Structures/Graphs/Topological%20Sort%20%26%20DAG)
+    
+    * [trees](https://github.com/Photon-LT/Algorithms-and-Data-Structures/tree/master/Data%20Structures/Graphs/trees)
+    
+    * [etc](https://github.com/Photon-LT/Algorithms-and-Data-Structures/tree/master/Data%20Structures/Graphs/etc)
  
   * [HLD](https://github.com/Photon-LT/Algorithms-and-Data-Structures/tree/master/Data%20Structures/HLD%20(Heavy%20Light%20Decomposition))
  
