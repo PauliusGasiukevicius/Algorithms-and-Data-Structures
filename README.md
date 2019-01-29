@@ -2,11 +2,11 @@
 
 ♣ [Algorithms](Algorithms)
 
-  • [Backtracking + Recursion](Backtracking + Recursion)
+  • [Backtracking + Recursion](Algorithms/Backtracking %2B Recursion)
   
   • [DP](DP)
   
-  • [Divide & Conquer](Divide & Conquer)
+  • [Divide & Conquer](Divide%20&%20Conquer)
   
   • [Greedy](Greedy)
   
@@ -16,7 +16,7 @@
   
   • [etc](etc)
 
-♣ [Data Structures](Data Structures)
+♣ [Data Structures](Data%20Structures)
 
 
 ♣ [Math](Math)
