@@ -1,9 +1,7 @@
 # Algorithms-and-Data-Structures
 
 * [Algorithms](Algorithms)
-
   * [Backtracking + Recursion](https://github.com/Photon-LT/Algorithms-and-Data-Structures/tree/master/Algorithms/Backtracking%20%2B%20Recursion)
-  
   * [DP](https://github.com/Photon-LT/Algorithms-and-Data-Structures/tree/master/Algorithms/DP)
   
   * [Divide & Conquer](https://github.com/Photon-LT/Algorithms-and-Data-Structures/tree/master/Algorithms/Divide%20%26%20Conquer)
