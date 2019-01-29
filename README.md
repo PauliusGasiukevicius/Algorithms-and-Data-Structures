@@ -1,23 +1,25 @@
 # Algorithms-and-Data-Structures
 
-♣ [Algorithms](Algorithms)
+* [Algorithms](Algorithms)
 
-  • [Backtracking + Recursion](Algorithms/Backtracking %2B Recursion)
+  * [Backtracking + Recursion](https://github.com/Photon-LT/Algorithms-and-Data-Structures/tree/master/Algorithms/Backtracking%20%2B%20Recursion)
   
-  • [DP](DP)
+  * [DP](https://github.com/Photon-LT/Algorithms-and-Data-Structures/tree/master/Algorithms/DP)
   
-  • [Divide & Conquer](Divide%20&%20Conquer)
+  * [Divide & Conquer](https://github.com/Photon-LT/Algorithms-and-Data-Structures/tree/master/Algorithms/Divide%20%26%20Conquer)
   
-  • [Greedy](Greedy)
+  * [Greedy](https://github.com/Photon-LT/Algorithms-and-Data-Structures/tree/master/Algorithms/Greedy)
   
-  • [Hashing](Hashing)
+  * [Hashing](https://github.com/Photon-LT/Algorithms-and-Data-Structures/tree/master/Algorithms/Hashing)
   
-  • [Strings](Strings)
+  * [Random](https://github.com/Photon-LT/Algorithms-and-Data-Structures/tree/master/Algorithms/Random)
   
-  • [etc](etc)
+  * [Strings](https://github.com/Photon-LT/Algorithms-and-Data-Structures/tree/master/Algorithms/Strings)
+  
+  * [etc](• [Random](https://github.com/Photon-LT/Algorithms-and-Data-Structures/tree/master/Algorithms/etc))
 
-♣ [Data Structures](Data%20Structures)
+* [Data Structures](Data%20Structures)
 
 
-♣ [Math](Math)
+* [Math](Math)
 
