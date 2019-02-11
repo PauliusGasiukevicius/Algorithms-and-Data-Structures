@@ -1,5 +1,19 @@
 #define ll long long
 
+ll powm(ll a, ll n, ll mod) //fast, non-recursive
+{
+    if(a==0)return 0;
+    if(n==0 || a==1)return 1 % mod;
+    ll pw = 1;
+    while( n > 0)
+    {
+        if(n&1)pw = pw*a %mod, n--;
+        a=a*a % mod;
+        n/=2;
+    }
+    return pw;
+}
+
 //a^b MOD M
 ll pow(ll a, ll b, ll& M)
 {
