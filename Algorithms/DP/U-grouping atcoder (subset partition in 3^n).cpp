@@ -31,10 +31,23 @@ int main()
             //^so we go through all masks by doing sub-1
             //and because we only want sub-subset we do &subset
             //so unimportant bits get turned off
-            //hence we loop only through required sub-subset (some repetition though but whatever)
+            //hence we loop only through required sub-subset 
             DP[i]=max(DP[i],DP[sub] + DP[sub^i]);
         }
     }
-
+    /*
+        So this work in 3^n
+        i.e. n=3
+        mask -> # submasks
+        000 -> 1
+        001 -> 2
+        010 -> 2
+        011 -> 4
+        100 -> 2
+        101 -> 4
+        110 -> 4
+        111 -> 8
+        as we can see total is 3^3 = 27, other cases work similarly, can be proven by induction or some binomial maths
+    */
     cout<<DP[(1<<n)-1];
 }
