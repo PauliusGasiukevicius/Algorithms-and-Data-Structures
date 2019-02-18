@@ -40,3 +40,19 @@ int main()
     sort(A.rbegin(),A.rend());
     cout<<solve(0,20000)<<"\n";
 }
+
+
+/* Bottom-Up version
+     sort(A.begin(),A.end());
+    vector<ll> dp(MAX_S + 1);
+    // dp[i] - best score of boxes with total weight i
+    for(auto block : A) {
+        for(int w = min(block.s, MAX_S - block.w); w >= 0; --w) {
+            dp[w+block.w] = max(dp[w+block.w], dp[w] + block.v);
+        }
+    }
+    ll answer = 0;
+    for(int i = 0; i <= MAX_S; ++i) {
+        answer = max(answer, dp[i]);
+    }
+*/
