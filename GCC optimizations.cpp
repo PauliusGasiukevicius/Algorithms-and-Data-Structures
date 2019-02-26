@@ -12,3 +12,5 @@
 #pragma GCC optimize ("unroll-loops")
 #pragma GCC target("sse,sse2,sse3,ssse3,sse4,popcnt,abm,mmx,avx,tune=native")
 /*Tries to use target architecture if possible, good for optimizing brute force loops*/
+
+scanf("%hhu",&ch) - scans unsigned char, unsigned char > unsigned short > unsigned int
