@@ -1,9 +1,11 @@
 #include <bits/stdc++.h>
 using namespace std;
 #define ll long long
+#define ld long double
+#define oo 666666666
 
 //BFS used for SSSP to generate level graph
-bool BFS(vector<vector<ll>>G[], vector<int>&L, int s, int t)
+bool BFS(vector<vector<array<ll,4>>>&G, vector<int>&L, int s, int t)
 {
     queue<int>q;
     q.push(s);
@@ -22,7 +24,7 @@ bool BFS(vector<vector<ll>>G[], vector<int>&L, int s, int t)
 }
 
 //flow is essentially dfs that finds augmenting paths on level graph
-ll flow(vector<vector<ll>>G[], vector<int>&L, vector<int>&nxt, int c, int t, ll f)
+ll flow(vector<vector<array<ll,4>>>&G, vector<int>&L, vector<int>&nxt, int c, int t, ll f)
 {
     if(c==t)return f;
     for(nxt[c]; nxt[c]<G[c].size(); nxt[c]++)
@@ -45,7 +47,7 @@ ll flow(vector<vector<ll>>G[], vector<int>&L, vector<int>&nxt, int c, int t, ll 
     return 0LL; // no more augmenting paths
 }
 
-ll Dinic(vector<vector<ll>>G[], int s, int t, int n)
+ll Dinic(vector<vector<array<ll,4>>>&G, int s, int t, int n)
 {
     if(s==t)return LLONG_MAX;
     ll maxFlow = 0;
@@ -62,21 +64,74 @@ ll Dinic(vector<vector<ll>>G[], int s, int t, int n)
     return maxFlow;
 }
 
-int main()
-{
-    ios::sync_with_stdio(0);
-    int n,m;
-    cin>>n>>m;
-    vector<vector<ll>>G[5001]; //[to][flow][cap][reverseID]
+//[to][flow][cap][reverseID]
 
-    for(int i=0,u,v,c; i<m; i++)
-    {
-        cin>>u>>v>>c;
+void AddEdge(vector<vector<array<ll,4>>>&G, int u, int v, int cap)
+{
         int ru = G[u].size();
         int rv = G[v].size();
-        G[u].push_back({v,0,c,rv});
-        G[v].push_back({u,0,c,ru}); //flow is 0 cause edges are undirected
-    }
+        G[u].push_back({v,0,cap,rv});
+        G[v].push_back({u,0,0,ru});
+}
 
-    cout<<Dinic(G,1,n,n)<<"\n";
+int main()
+{
+    ios::sync_with_stdio(0);cin.tie(0);cout.tie(0);
+    int t,n,m,k;
+    cin>>t;
+    while(t--)
+    {
+        cin>>n>>m>>k;
+        vector<vector<array<ll,4>>>G(n+m+3);
+        vector<vector<array<int,2>>>g(n+m+3);
+        vector<int>ats(m+1);
+        int source = n+m+1;
+        int sink = n+m+2;
+
+        for(int i=0; i<m; i++)
+        {
+            int u,v;
+            cin>>u>>v;
+            g[u].push_back({v,i+1});
+            g[v].push_back({u,i+1});
+        }
+
+        int need = 0;
+
+        for(int i=1; i<=n; i++)
+            if(g[i].size() > k)
+            {
+                need+=2*(g[i].size()-k);
+                AddEdge(G, source, i, 2*(g[i].size()-k));
+            }
+
+        for(int i=1; i<=n; i++)
+            for(auto&u : g[i])
+            AddEdge(G,i,n+u[1],1);
+
+        for(int i=n+1; i<=n+m; i++)
+            AddEdge(G,i,sink,1);
+
+        if(Dinic(G,source,sink,n+m+3)==need)
+        {
+            int nxt = 1, add = 0;
+
+            for(int i=1; i<=n; i++)
+                for(auto&e : G[i])
+                if(e[1] > 0)
+                {
+                    ats[e[0]-n]=nxt;
+                    nxt+=add;
+                    add^=1;
+                }
+
+            for(int i=1; i<=n; i++)
+                for(auto&e:g[i])
+                    if(ats[e[1]]==0)
+                    ats[e[1]]=nxt++;
+        }
+
+        for(int i=1; i<=m; i++)
+            cout<<ats[i]<<(i==m?"\n":" ");
+    }
 }
