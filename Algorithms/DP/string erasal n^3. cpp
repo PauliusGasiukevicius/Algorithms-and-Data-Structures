@@ -1,0 +1,35 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define ll long long
+#define ld long double
+#define oo 666666666
+
+int can[505][505];
+int DP[505][505];
+
+int solve(int l, int r, string&s)
+{
+    if(l > r)return 0;
+    if(can[l][r])return DP[l][r];
+    if(l==r)return 1;
+    DP[l][r]=1+solve(l+1,r,s);
+
+    for(int i=l+1; i<=r; i++)
+        if(s[i]==s[l])//we can ignore either i or l cause they will be deleted with some other char
+        DP[l][r]=min({DP[l][r],
+                      solve(l+1,i,s) + solve(i,r,s),
+                      solve(l,i-1,s) + solve(i+1,r,s)
+                     });
+
+    can[l][r]=1;
+    return DP[l][r];
+}
+
+int main()
+{
+    ios::sync_with_stdio(0);cin.tie(0);cout.tie(0);
+    int n;
+    string s;
+    cin>>n>>s;
+    cout<<solve(0,n-1,s);
+}
