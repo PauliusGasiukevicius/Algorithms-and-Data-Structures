@@ -1,0 +1,65 @@
+Number of spanning trees with N nodes = N^(N-2)
+
+Number of spanning trees in complete bipartite graph G(x,y) = x^(y-1) * y^(x-1)
+
+For two coprime positive integers m and n, that largest number that cannot be written as 
+am + bn (cannot be made by adding up m and n) will be m*n — m — n.
+
+For any pair of positive integers n and k, the number of k-tuples of positive integers whose sum is n is equal to 
+the number of (k − 1)-element subsets of a set with n − 1 elements. Choose(n-1,k-1)
+
+For any pair of positive integers n and k, the number of k-tuples of non-negative integers whose sum is n is equal to 
+the number of multisets of cardinality k − 1 taken from a set of size n + 1. Choose(n+k-1,k-1)
+
+ats = 0;
+for(int k=0; k<=r; k++)
+ats+=Choose(m,k)*Choose(n,r-k);
+is same as ats = Choose(m+n,r)
+
+ats = 0;
+for(int i=r; i<=n; i++)
+ats+=Choose(i,r);
+is same as ats = Choose(n+1,r+1)
+
+ats = 0;
+for(int k=0; k<=n; k++)
+ats+=Choose(n,k);
+is same as ats = 2^n
+
+ats = 0;
+for(int m=0; m<=n; m++)
+ats+=Choose(m,k);
+is same as ats = Choose(n+1,k+1)
+
+ats = 0;
+for(int k=0; k<=m; k++)
+ats+=Choose(n+k,k);
+is same as ats = Choose(n+m+1,m)
+
+ats = 0;
+for(int k=0; k<=n; k++)
+ats+=Choose(n,k)^2;
+is same as ats = Choose(2*n,n)
+
+ats = 0;
+for(int k=0; k<=n; k++)
+ats+=k*Choose(n,k);
+is same as ats = n*2^(n-1)
+
+"In an election where candidate A receives p votes and candidate B receives q votes with p > q, what is the probability
+that A will be strictly ahead of B throughout the count?" The answer is (p-q)/(p+q)
+
+Every even integer greater than 2 can be expressed as the sum of two primes.
+
+In number theory, Wilson's theorem states that a natural number n > 1 is a prime number if and only if the product of all 
+the positive integers less than n is one less than a multiple of n. So n is prime if and only if (n-1)! mod n = -1
+
+Zeckendorf's theorem states that every positive integer can be represented uniquely as the sum of one or more distinct 
+Fibonacci numbers in such a way that the sum does not include any two consecutive Fibonacci numbers.
+
+A multiplicative functions is a function f(x) which satisfies f(a*b) = f(a)*f(b)
+let d(n) - count of divisors of n
+let σ(n) - sum of divisors of n
+Both σ() and d() are multiplicative
+
+for
