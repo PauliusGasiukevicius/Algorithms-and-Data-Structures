@@ -1,10 +1,4 @@
-#include <bits/stdc++.h>
-using namespace std;
-#define ll long long
-#define ld long double
-#define oo 666666666
-
-int josephus(int n, int k) //standart problem when we always remove every k-th person
+int josephus(int n, int k) //standart problem when we always remove every k-th person, complexity O(n)
 {
     int ats = 0;
     for(int i=1; i<=n; i++)
@@ -12,27 +6,25 @@ int josephus(int n, int k) //standart problem when we always remove every k-th p
     return ats+1;
 }
 
-int josephus2(int n)
+int josephus2(int n) //Special case when k=2 can be solved with math formula, complexity O(log n)
+{return 2*(n-pow(2,floor(log2(n))))+1;}
+
+ll josephus3(ll n, int k)//Another special case when n is large and k is small, complexity O(k log n)
 {
-    return 2*(n-pow(2,floor(log2(n))))+1;
+    if (n == 1)return 0;
+    if (k == 1)return n-1;
+    if (k > n)return (josephus3(n-1, k) + k) % n;
+    ll cnt = n / k;
+    ll res = josephus3(n - cnt, k);
+    res -= n % k;
+    res+=(res<0 ? n : res/(k-1));
+    return res;
 }
 
-int josephusW(int n, vector<int>&K)//modified, now we will remove K[0]-thperson first, then K[1]-th...
+int josephusW(int n, vector<int>&K)//modified original problem, now we will remove K[0]-thperson first, then K[1]-th...
 {
     int ats = 0;
     for(int i=1; i<=n; i++)
         ats = (ats + K[n-i])%i;
     return ats+1;
-}
-
-int main()
-{
-    ios::sync_with_stdio(0);
-    int t,n,k;
-    cin>>t;
-    for(int cs=1; cs<=t; cs++)
-    {
-        cin>>n>>k;
-        cout<<"Case "<<cs<<": "<<josephus(n,k)<<"\n";
-    }
 }
