@@ -43,7 +43,7 @@ void Newton_Interpolation(vector<ld>X, vector<ld>Y)
 
     while(L.back().size() > 1 && L.back().back()==0)L.back().pop_back();
     for(int pw = L.back().size()-1; pw>=0; pw--)
-        cout<<L.back()[pw]<<" x^"<<pw<<" ";
+        cout<<L.back()[pw]<<" x^"<<pw<<"  ";
     cout<<"\n";
 }
 
