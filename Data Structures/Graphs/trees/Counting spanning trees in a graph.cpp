@@ -32,6 +32,11 @@ ld Determinant(vector<vector<ld>>a){
     return det;
 }
 
+/*
+Kirchhoff's theorem holds for multigraphs as well; the matrix M is modified as follows:
+    The entry M i,j equals −m, where m is the number of edges between i and j;
+    when counting the degree of a vertex, all loops are excluded.
+*/
 ll Kirchhoff(vector<vector<int>>M)
 {
     int n=M.size();
