@@ -53,7 +53,11 @@ ll Kirchhoff(vector<vector<int>>M){
 
     return round(Determinant(L));
 }
-
+/** Can also count MST's : 
+1) Split the edges into sets according to their cost.
+2) Then, for each cost starting with the smallest one, consider those edges only. They form several components. 
+3) For each such component, compute the number of spanning trees using the Matrix Tree Theorem,
+4) multiply the result by this value, and then merge the component into a single vertex.*/
 
 int A[31][31][31][31];
 map<array<int,2>,int>mp;
