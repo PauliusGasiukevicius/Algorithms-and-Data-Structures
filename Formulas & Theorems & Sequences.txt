@@ -62,4 +62,6 @@ let d(n) - count of divisors of n
 let σ(n) - sum of divisors of n
 Both σ() and d() are multiplicative
 
-for
+Cos theorem: a*a = b*b + c*c - 2*b*c*cosAlpha
+
+
