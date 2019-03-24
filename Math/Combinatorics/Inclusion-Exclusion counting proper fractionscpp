@@ -1,0 +1,74 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define ll long long
+#define ld long double
+#define oo 666666666
+
+vector<int> unique_fact(int n)
+{
+    vector<int>res;
+    for(int i=2; i*i<=n; i++)
+        if(n%i==0)
+    {
+        while(n%i==0)n/=i;
+        res.push_back(i);
+    }
+    if(n!=1)res.push_back(n);
+    return res;
+}
+
+int main()
+{
+    ios::sync_with_stdio(0);cin.tie(0);cout.tie(0);
+    ld x;
+    int n;
+    ll ats = 0;
+    cin>>x>>n;
+
+    for(int i=1; i<=n; i++)
+    {
+        int l = 0, r = i-1;
+
+        while(l < r)
+        {
+            int mi = (l+r+1)/2;
+            ld fr = 1.0*mi/i;
+
+            if(fr <= x)
+                l=mi;
+            else
+                r=mi-1;
+        }
+        int y = r;
+
+        vector<int>f = unique_fact(i);
+        ll ok = 0;
+
+        //Counting x that GCD(i,x)==1
+        //Inclusion/Exclusion, first we get all unique factors
+        //When count numbers that divide some set of factors
+        //and +- based on set size
+        for(int j=0; j<(1<<f.size()); j++)
+        {
+            bitset<32>b(j);
+            ll mul = 1;
+            int parity=0;
+
+            for(int k=0; k<f.size(); k++)
+                if(b[k])
+                {
+                    parity++;
+                    mul*=f[k];
+                }
+
+            if(parity&1)ok-=y/mul;
+            else ok+=y/mul;
+        }
+
+       // cout<<i<<" "<<y<<" "<<ok<<"\n";
+
+        ats+=ok;
+    }
+
+    cout<<ats;
+}
