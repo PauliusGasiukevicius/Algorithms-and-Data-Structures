@@ -64,6 +64,44 @@ ll Dinic(vector<vector<array<ll,4>>>&G, int s, int t, int n)
     return maxFlow;
 }
 
+//Assumes flow network is build as follows:
+//All nodes in left part are conneected to right one with cap 1
+//source connected to left with cap 1
+//right to sink with cap 1
+array<vector<int>,2> MVC(vector<vector<array<ll,4>>>&G, int s, int t, int n)
+{
+    Dinic(G,s,t,n); // fill flow network
+
+    queue<array<int,2>>q; //[node, flow of next edge, to make alternating path]
+    vector<int>vis(n+1);
+
+    for(auto&e : G[s])
+        if(e[1] == 0) // no flow == unmatched vertex of left part
+        q.push({e[0],0}),vis[e[0]]=1;
+
+    while(!q.empty())
+    {
+        int c = q.front()[0];
+        int f = q.front()[1];
+        q.pop();
+
+        for(auto&e:G[c])
+        if(!vis[e[0]] && e[1]==f && e[0]!=s && e[0]!=t)
+        vis[e[0]]=1,q.push({e[0],f ? 0 : -1});
+    }
+
+    vector<int>A,B;
+    //now part A is nodes unvisited on left side
+    for(auto&e:G[s])
+        if(!vis[e[0]])A.push_back(e[0]);
+
+    //now part B is nodes visited on right side
+    for(auto&e:G[t])
+        if(vis[e[0]])B.push_back(e[0]);
+
+    return {A,B};
+}
+
 //[to][flow][cap][reverseID]
 
 void AddEdge(vector<vector<array<ll,4>>>&G, int u, int v, int cap)
