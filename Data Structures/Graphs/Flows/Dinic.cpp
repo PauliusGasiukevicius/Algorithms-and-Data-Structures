@@ -101,9 +101,12 @@ array<vector<int>,2> MVC(vector<vector<array<ll,4>>>&G, int s, int t, int n)
 
     return {A,B};
 }
+//Other related stuff:
+//Minimum edge cover: 1) get any Maximum Matching 2) Include any nodes not in matching by any random edge
+//Maximum Independant Set 1) Actually its opposite of minimum vertex cover, so find MVC and take all nodes not in it
+
 
 //[to][flow][cap][reverseID]
-
 void AddEdge(vector<vector<array<ll,4>>>&G, int u, int v, int cap)
 {
         int ru = G[u].size();
