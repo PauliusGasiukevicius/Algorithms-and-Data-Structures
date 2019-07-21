@@ -288,6 +288,27 @@ int tangents(point o1, ld r1, point o2, ld r2, bool inner, vector<pair<point,poi
     return 1 + (h2 > 0);
 }
 
+///Centroid (center of mass)
+
+point centroidOfPolygon(vector<point>&A){
+    point res = {0,0};
+    ld signedArea = 0;
+    int n = A.size();
+
+    for(int i=0; i<n; i++)
+    {
+        res.x+=(A[i].x + A[(i+1)%n].x)*(A[i].x * A[(i+1)%n].y - A[(i+1)%n].x * A[i].y);
+        res.y+=(A[i].y + A[(i+1)%n].y)*(A[i].x * A[(i+1)%n].y - A[(i+1)%n].x * A[i].y);
+        signedArea+=(A[i].x * A[(i+1)%n].y - A[(i+1)%n].x * A[i].y);
+    }
+
+    signedArea*=0.5;
+    res.x /= (6*signedArea);
+    res.y /= (6*signedArea);
+
+    return res;
+}
+
 int main()
 {
     ios::sync_with_stdio(0);cin.tie(0);cout.tie(0);
