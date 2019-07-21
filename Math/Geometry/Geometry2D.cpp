@@ -6,6 +6,9 @@ using namespace std;
 #define ld long double
 #define oo 1234567890
 
+///NOTE: All this is made with mainly integers in mind, so if doubles are needed, some function will need to be modified:
+//i.e. instead of something == 0, fabs(something) < epsilon and so on
+
 ///Points
 typedef ll T;
 const ld PI = acos(-1);
