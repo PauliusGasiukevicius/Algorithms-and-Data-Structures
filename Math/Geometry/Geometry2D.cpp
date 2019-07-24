@@ -309,6 +309,28 @@ point centroidOfPolygon(vector<point>&A){
     return res;
 }
 
+///Rotating Calipers
+ld polygonDiameter(vector<point> p) { //got AC for some random problems, not sure if it`s fully ok though
+  ld eps = 1e-8;
+  int n = p.size();
+  p.push_back(p[0]); //just to save little time on mod n
+
+  int to = 0;
+  ld ans = 0;
+  for (int i = 0; i < n; ++i)
+  {
+    while ((to + 1) % n != i)
+    {
+      if (cross(p[i + 1] - p[i], p[to + 1] - p[i]) - cross(p[i + 1] - p[i], p[to] - p[i]) >= 0)
+        to = (to + 1) % n;
+      else break;
+    }
+    ans = max(ans, abs(p[i] - p[to]));
+    ans = max(ans, abs(p[i + 1] -  p[to]));
+  }
+  return ans;
+}
+
 int main()
 {
     ios::sync_with_stdio(0);cin.tie(0);cout.tie(0);
