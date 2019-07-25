@@ -13,6 +13,8 @@ struct suffix_tree{
     //longest-common-prefix of 2 suffixes is just root-node path length to their LCA
     //to 'finish' building suffix_tree you need to append some separator, so called dollar ('$')
     //dollar must be smaller than all other letters in alphabet
+    //if using dp on suffix-tree using DAG: to-parent edges and suffix links, note that
+    //link of root should be ignored (it`s not 0 for some reason) + suffix links for leafs should be added after finishing building the tree
 	const static int inf = 1e9;
 	vector<T> s; //our string/int array
 	vector<map<T, int>> next; //next nodes to go to, stored in map for easy lex order (array would be faster)
@@ -140,7 +142,30 @@ struct suffix_tree{
 	int get_len(int p) { return p == 0 ? 0 : min(len[p], (int)s.size()-spos[p]); }
 };
 
-const int N = 100001;
+const int N = 100001; //max string size + 1 for dollar
+int suffixNodeId[2*N+1]; //for suffix that starts at i stores its corresponding node id in suffix tree
+
+void dfs0(suffix_tree<char>&st, int c = 0, int len = 0){
+    len+=st.get_len(c);
+    for(auto&u:st.next[c])
+        dfs0(st,u.second,len);
+
+    if(st.next[c].empty()) //leaf
+    {
+        int start = st.spos[c] - len + st.get_len(c);
+        suffixNodeId[start] = c;
+    }
+}
+
+void addSuffixLinksForLeafs(suffix_tree<char>&st)
+{
+    dfs0(st);
+    //from some leaf(suffix) starting at i we can go to next one starting at i+1, so we add link
+    for(int i=0; i+1<st.s.size(); i++)
+        st.link[suffixNodeId[i]] = suffixNodeId[i+1];
+}
+
+
 const int lgN = 19;
 int in[2*N+1],out[2*N+1];
 int up[2*N+1][lgN+1];
