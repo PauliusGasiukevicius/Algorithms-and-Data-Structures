@@ -331,6 +331,70 @@ ld polygonDiameter(vector<point> p) { //got AC for some random problems, not sur
   return ans;
 }
 
+int next(int n, int mod) //helper function, faster than using mod operations
+{
+	if (n == mod - 1)return 0;
+	return n + 1;
+}
+
+vector<point> minAreaEnclosingBox(vector<point>&ch)
+{
+    int n = ch.size();
+	ld angle = 0;
+	int left = 0;
+	int right = 0;
+	int top = 0;
+	int bottom = 0;
+
+	for (int i = 0; i < n; ++i)
+	{
+		if (ch[i].x < ch[left].x) left = i;
+		if (ch[i].x > ch[right].x) right = i;
+		if (ch[i].y > ch[top].y) top = i;
+		if (ch[i].y < ch[bottom].y) bottom = i;
+	}
+
+	int tbottom = bottom;
+	vector<point>rect(4);
+	rect[0] = {ch[left].x, ch[top].y};
+	rect[1] = {ch[left].x, ch[bottom].y};
+	rect[2] = {ch[right].x, ch[bottom].y};
+	rect[3] = {ch[right].x, ch[top].y};
+
+	ld minArea = (ch[top].y - ch[bottom].y) * (ch[right].x - ch[left].x);
+
+	while (1)
+	{
+		while (cross(ch[next(right, n)] - ch[right], rot(ch[next(bottom, n)] - ch[bottom], PI / 2)) >= 0)
+			right = next(right, n);
+		while (cross(ch[next(top, n)] - ch[top], rot(ch[next(bottom, n)] - ch[bottom], PI)) >= 0)
+			top = next(top, n);
+		while (cross(ch[next(left, n)] - ch[left], rot(ch[next(bottom, n)] - ch[bottom], PI * 3 / 2)) >= 0)
+			left = next(left, n);
+
+		angle = atan2(ch[next(bottom, n)].y - ch[bottom].y, ch[next(bottom, n)].x - ch[bottom].x);
+		bottom = next(bottom, n);
+
+		point tl = rot(ch[left], -angle);
+		point tr = rot(ch[right], -angle);
+		point tt = rot(ch[top], -angle);
+		point tb = rot(ch[bottom], -angle);
+		ld area = fabs((tt.y - tb.y) * (tr.x - tl.x));
+
+		if (area < minArea)
+		{
+			minArea = area;
+			rect[0] = rot({tl.x, tt.y}, angle);
+			rect[1] = rot({tl.x, tb.y}, angle);
+			rect[2] = rot({tr.x, tb.y}, angle);
+			rect[3] = rot({tr.x, tt.y}, angle);
+		}
+		if (tbottom == bottom)break;
+	}
+	return rect;
+}
+
+
 int main()
 {
     ios::sync_with_stdio(0);cin.tie(0);cout.tie(0);
