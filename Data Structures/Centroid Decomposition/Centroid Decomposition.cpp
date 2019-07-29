@@ -2,217 +2,196 @@
 using namespace std;
 #define ll long long
 #define ld long double
-#define oo 666666666
+#define oo 1234567890
 
-#define N 100001
-#define LOGN 20
-int root; //this will become first centroid of the tree after decomposing input tree
-vector<int>G[N]; //input tree
-vector<int>T[N]; //centroid tree
-int centroid[N]; //marks used nodes
-int P[LOGN][N]; //parent, has LOGN dimension for all centroid levels
-int closestRed[N]; //distance to closest red node in centroid tree
-int sz[LOGN][N]; //subtree size, has LOGN dimension for all centroid levels
-int parent[N]; // parents for centroid tree
-int parentInput[N];
-int depth[N]; // depths of original tree rooted at first centroid
-int centroidTreeDepth[N]; // depths of centroid tree rooted at first centroid
-//all this stuff uses like 60*N memory :/
-int seg[8*N];
-vector<int>first(N);
-vector<int>euler;
-
-void dfs(int c,int p, vector<int>&euler,vector<int>&first, vector<int>G[])
+struct CentroidDecomposition
 {
-    euler.push_back(c);
-    first[c]=euler.size();
+    int N,root,logN;
+    vector<vector<int>>g; //initial tree, gotta add edges with add_edge
+    vector<vector<ll>>w; //weights for edges, if unweighted pass 1 while adding edge
+    vector<vector<int>>tree; //resulting centroid decomposition tree
+    vector<int>dead; //marks nodes dead
+    vector<int>sz; //stores subtree sizes
+    vector<int>IN; //euler tour time node was first visited
+    vector<int>OUT;//euler tour time node was last visited
+    vector<int>P; //parent of centroid tree node
+    vector<ll>depth; //depth/distance in original tree from root to other nodes
+    vector<vector<int>>up; //sparse table for lca
 
-    for(int&u : G[c])
-        if(u!=p)
+    CentroidDecomposition(int n){
+        int tmp = n+1;
+        N=n+1,root=-1,logN=0;
+        while(tmp > 0)logN++,tmp/=2;
+
+        g.resize(N);
+        w.resize(N);
+        tree.resize(N);
+        dead.resize(N);
+        sz.resize(N);
+        IN.resize(N);
+        OUT.resize(N);
+        P.resize(N);
+        depth.resize(N);
+        up.resize(N);
+        for(int i=0; i<N; i++)
+            up[i].resize(logN+1);
+    }
+
+    void add_edge(int u, int v, int weight){
+        g[u].push_back(v);
+        w[u].push_back(weight);
+        g[v].push_back(u);
+        w[v].push_back(weight);
+    }
+
+    bool isAncestor(int u, int v){return IN[u]<=IN[v] && OUT[u]>=OUT[v];}
+
+    int LCA(int u, int v){
+        if(isAncestor(u,v))return u;
+        if(isAncestor(v,u))return v;
+
+        for(int i=logN; i>=0; i--)
+            if(!isAncestor(up[u][i],v))
+            u=up[u][i];
+
+        return up[u][0];
+    }
+
+    ll dist(int u, int v){return depth[u] + depth[v] - 2LL*depth[LCA(u,v)];}
+
+    int dfs(int c, int p = 0){
+        sz[c]=1;
+        for(auto&u:g[c])
+            if(u!=p && !dead[u])
+            sz[c]+=dfs(u,c);
+        return sz[c];
+    }
+
+    void dfs2(int c, int p, ll d = 0){
+        static int tm = 1;
+        IN[c] = ++tm;
+
+        up[c][0]=p;
+        for(int j=1; j<=logN; j++)
+            up[c][j]=up[up[c][j-1]][j-1];
+
+        depth[c]=d;
+        for(int i=0; i<g[c].size(); i++)
+            if(g[c][i] != p)
+            dfs2(g[c][i],c,d+w[c][i]);
+
+        OUT[c] = ++tm;
+    }
+
+    int FindCentroid(int c, int n, int p = 0){
+        for(auto&u:g[c])
+            if(u!=p && !dead[u] && sz[u] > n/2)
+            return FindCentroid(u,n,c);
+        return c;
+    }
+
+    int BuildCentroidTree(int c=1, int level = 1)
+    {
+        dfs(c);
+        if(level==1)root = c = FindCentroid(c,sz[c]);
+        else c = FindCentroid(c,sz[c]);
+
+        dead[c]=level; //mark current node as dead
+        for(auto&u:g[c])//build centroid tree for all other subtrees
+        if(!dead[u])
         {
-            dfs(u,c,euler,first,G);
-            euler.push_back(c);//cause we will reach this node after climbing the tree
+            int v = BuildCentroidTree(u,level+1);
+            tree[c].push_back(v);
+            tree[v].push_back(c);
+            //cout<<c<<" --> "<<v<<" \n";
+            P[v]=c;
         }
-}
 
-void build(int seg[], int c, int l, int r, vector<int>&euler)
+        if(level==1)dfs2(root,root);
+        return c;
+    }
+};
+
+CentroidDecomposition cd(100001);
+vector<array<ll,3>>S[100001]; //{dist, color}
+
+void Update(int c, ll dist, int color)
 {
-    if(l==r)
-    {
-        seg[c]=euler[r-1];
-        return;
-    }
+    static int updateID = 1;
+    int st = c;
 
-    int m = (l+r)/2;
-    build(seg,2*c,l,m,euler);
-    build(seg,2*c+1,m+1,r,euler);
-    seg[c]=depth[seg[2*c]] < depth[seg[2*c+1]] ? seg[2*c] : seg[2*c+1];
+    while(c > 0)
+    {
+        ll distToC = dist - cd.dist(st, c);
+
+        if(distToC >= 0)
+        {
+            while(!S[c].empty() && S[c].back()[0] <= distToC)
+                S[c].pop_back();
+
+            S[c].push_back({distToC,color,updateID++});
+        }
+
+        //cout<<c<<" "<<dist<<" "<<color<<" "<<updateID-1<<" <<<<<<<<<\n";
+        c = cd.P[c];
+    }
 }
 
-int query(int seg[],int c, int l, int r, int L, int R)
+int Query(int c)
 {
-    if(r<l || l>R || r<L)return INT_MAX;
+    int st = c;
+    int color = 0;
+    int latestUpdate = 0;
 
-    if(l>=L && r<=R)return seg[c];
-    int m = (l+r)/2;
-    int q1 = query(seg,2*c,l,m,L,R);
-    int q2 = query(seg,2*c+1,m+1,r,L,R);
-    if(max(q1,q2)==INT_MAX)return min(q1,q2);
-    return (depth[q1] < depth[q2] ? q1 : q2);
-}
-
-void bfs(int c) //fills in depth[].
-{//depth[i] - distance from root(first c) to node i on original tree
-    vector<int>visited(N,0);
-    visited[c]=1;
-    depth[c]=0;
-    queue<int>q;
-    q.push(c);
-
-    while(!q.empty())
+    while(c > 0)
     {
-        int u = q.front();
-        q.pop();
+        ll distToC = cd.dist(st,c);
 
-        for(auto&v:G[u])
-            if(!visited[v])
-            q.push(v),depth[v]=depth[u]+1,visited[v]=1,parentInput[v]=u;
+        if(!S[c].empty() && S[c][0][0] >= distToC) //if some coloring is saved here
+        {
+            int l = 0, r = S[c].size()-1;
+            while(l < r)
+            {
+                int m = (l+r+1)/2;
+                if(S[c][m][0] >= distToC)
+                    l=m;
+                else r = m-1;
+            }
+
+            if(S[c][r][2] > latestUpdate)
+            {
+                latestUpdate = S[c][r][2];
+                color = S[c][r][1];
+            }
+        }
+
+        c = cd.P[c];
     }
-}
-
-void bfs2(int c) //fills in centroidTreeDepth[].
-{//centroidTreeDepth[i] - distance from root(first c) to node i on centroid tree
-    vector<int>visited(N,0);
-    visited[c]=1;
-    centroidTreeDepth[c]=0;
-    queue<int>q;
-    q.push(c);
-
-    while(!q.empty())
-    {
-        int u = q.front();
-        q.pop();
-
-        for(auto&v:T[u])
-            if(!visited[v])
-            q.push(v),centroidTreeDepth[v]=centroidTreeDepth[u]+1,visited[v]=1;
-    }
-}
-
-void dfs(int c, int L) //gets subtree sizes calculated for tree (without centroids)
-{//L - level of centroid tree
-    sz[L][c]=1;
-    for(auto&u:G[c])
-        if(u!=P[L][c] && !centroid[u])
-        P[L][u]=c,dfs(u,L),sz[L][c]+=sz[L][u];
-}
-
-void decompose(int c, int nodes, int p, int L) //decomposes current tree into centroid tree
-{
-    dfs(c,L);
-    while(1)
-    {
-    int cand = c;
-    int mx = 1;
-
-    for(auto&u:G[c])
-        if(!centroid[u])
-    {
-        if(P[L][c]!=u && sz[L][u] >= mx)mx=sz[L][u],cand=u;
-        else if(nodes-sz[L][c] >= mx)mx=nodes-sz[L][c],cand=u;
-    }
-
-    if(mx*2 <= nodes || nodes<=1) //if we found a centroid
-    {
-        centroid[c]=1;
-        if(p)//if this node is not root, update centroid tree
-            T[p].push_back(c),T[c].push_back(p),parent[c]=p;
-        else root=c;
-        break;
-    }
-    else c=cand; // go to the subtree that has centroid
-    }
-
-    if(nodes<=1)return;
-
-    for(auto&u:G[c])
-        if(!centroid[u] && u!=P[L][c])decompose(u,sz[L][u],c,L+1);
-        else if(!centroid[u])decompose(u,nodes-sz[L][c],c,L+1);
-}
-
-int LCA_T(int u, int v) //finds LCA in centroid tree of centroids u and v
-{//because of nature of centroid tree, takes O(log n) time
-    while(u!=v)
-    {
-        if(centroidTreeDepth[u] > centroidTreeDepth[v])u=parent[u];
-        else if(centroidTreeDepth[v] > centroidTreeDepth[u])v=parent[v];
-        else u=parent[u],v=parent[v];
-    }
-    return u;
-}
-
-int LCA(int u, int v)
-{//TODO find LCA of 2 nodes in original tree, rooted at first centroid
-    return query(seg,1,1,euler.size(),min(first[u],first[v]), max(first[u],first[v]));
-}
-
-int Distance(int u, int v)
-{//calculates distance between 2 nodes in O(log n) (uses LCA)
-    return depth[u] + depth[v] - 2*depth[LCA(u,v)];
-}
-
-int CentroidDist(int u, int v)
-{//because all paths from u to v will go through LCA_T(u,v), decomposes paths and gets Distance
-    int lca = LCA_T(u,v);
-    return Distance(u,lca) + Distance(v,lca);
-}
-
-void colorRed(int c)
-{
-    closestRed[c]=0;
-    int u = c;
-    while(parent[u])
-    {
-        u=parent[u]; // go up
-        closestRed[u] = min(closestRed[u], CentroidDist(c,u));
-    }
-}
-
-int query(int c)
-{
-    int ats = closestRed[c];
-    int u = c;
-    while(parent[u])
-    {
-        u=parent[u]; // go up
-        ats = min(ats, CentroidDist(c,u) + closestRed[u]);
-    }
-    return ats;
+    return color;
 }
 
 int main()
 {
-    ios::sync_with_stdio(0);
-    int n,m,type,v;
-    cin>>n>>m;
+    ios::sync_with_stdio(0);cin.tie(0);cout.tie(0);
+    int n,q;
+    cin>>n;
 
-    for(int i=1,u,v; i<n; i++)
-        {
-            cin>>u>>v;
-            G[u].push_back(v),G[v].push_back(u);
-        }
-    decompose(1,n,0,0); //build centroid tree T, from input tree G
-    bfs(root); //calculates depth for all nodes from root (Original tree)
-    bfs2(root);//calculates depth for all nodes from root (Centroid tree)
-    fill(closestRed, closestRed + N, oo); //sets initial distances to oo
-    dfs(root,-1,euler,first,G);//gets euler tour of original tree from root
-    build(seg,1,1,euler.size(),euler); //builds segment tree on euler tour, uses RMQ comparing depth
-    colorRed(1);
-
-    while(m--)
+    for(int i=1; i<n; i++)
     {
-        cin>>type>>v;
-        if(type&1)colorRed(v);
-        else cout<<query(v)<<"\n";
+        int u,v,w=1;
+        cin>>u>>v>>w;
+        cd.add_edge(u,v,w);
+    }
+
+    cd.BuildCentroidTree();
+
+    cin>>q;
+    while(q--)
+    {
+        int type,c,d,col;
+        cin>>type>>c;
+
+        if(type==1)cin>>d>>col,Update(c,d,col);
+        else cout<<Query(c)<<"\n";
     }
 }
