@@ -4,42 +4,39 @@ using namespace std;
 #define ld long double
 #define oo 1234567890
 
-//If min is needed instead of max, just add lines as insert_line(-a, -m) instead of (a,m)
-//and when evaluating y = eval(x), just use y = -eval(x)
-const ll is_query = -(1LL<<62);
+//If min is needed instead of max, just add lines as add(-a, -m) instead of add(a,m)
+//and when evaluating y = query(x), just use y = -query(x)
+bool Q;
 struct Line {
-    ll m, b;
-    mutable function<const Line*()> succ;
-    bool operator<(const Line& rhs) const {
-        if (rhs.b != is_query) return m < rhs.m;
-        const Line* s = succ();
-        if (!s) return 0;
-        ll x = rhs.m;
-        return b - s->b < (s->m - m) * x;
-    }
+	mutable ll k, m, p;
+	bool operator<(const Line& o) const {
+		return Q ? p < o.p : k < o.k;
+	}
 };
-struct HullDynamic : public multiset<Line> { // will maintain upper hull for maximum
-    bool bad(iterator y) {
-        auto z = next(y);
-        if (y == begin()) {
-            if (z == end()) return 0;
-            return y->m == z->m && y->b <= z->b;
-        }
-        auto x = prev(y);
-        if (z == end()) return y->m == x->m && y->b <= x->b;
-        return (x->b - y->b)*(z->m - y->m) >= (y->b - z->b)*(y->m - x->m);
-    }
-    void insert_line(ll m, ll b) {
-        auto y = insert({ m, b });
-        y->succ = [=] { return next(y) == end() ? 0 : &*next(y); };
-        if (bad(y)) { erase(y); return; }
-        while (next(y) != end() && bad(next(y))) erase(next(y));
-        while (y != begin() && bad(prev(y))) erase(prev(y));
-    }
-    ll eval(ll x) {
-        auto l = *lower_bound((Line) { x, is_query });
-        return l.m * x + l.b;
-    }
+
+struct LineContainer : multiset<Line> {
+	// (for doubles, use inf = 1/.0, div(a,b) = a/b)
+	const ll inf = LLONG_MAX;
+	ll div(ll a, ll b) { // floored division
+		return a / b - ((a ^ b) < 0 && a % b); }
+	bool isect(iterator x, iterator y) {
+		if (y == end()) { x->p = inf; return false; }
+		if (x->k == y->k) x->p = x->m > y->m ? inf : -inf;
+		else x->p = div(y->m - x->m, x->k - y->k);
+		return x->p >= y->p;
+	}
+	void add(ll k, ll m) {
+		auto z = insert({k, m, 0}), y = z++, x = y;
+		while (isect(y, z)) z = erase(z);
+		if (x != begin() && isect(--x, y)) isect(x, y = erase(y));
+		while ((y = x) != begin() && (--x)->p >= y->p)
+			isect(x, erase(y));
+	}
+	ll query(ll x) {
+		assert(!empty());
+		Q = 1; auto l = *lower_bound({0,0,x}); Q = 0;
+		return l.k * x + l.m;
+	}
 };
 
 ll solve(vector<ll>&A, vector<ll>&B)
@@ -48,9 +45,9 @@ ll solve(vector<ll>&A, vector<ll>&B)
     vector<ll>F(n);
 
     for(int i=1; i<n; i++)
-        F[i]=F[i-1] + A[i]*(B[i]-B[i-1]);
+        F[i]=F[i-1] + A[i]*(B[i-1]-B[i]);
 
-    HullDynamic ch;
+    LineContainer ch;
 
     ll initial = 0, res = 0;
 
@@ -59,14 +56,14 @@ ll solve(vector<ll>&A, vector<ll>&B)
 
     res=initial;
 
-    ch.insert_line(A[0],-A[0]*B[0]+F[0]);
+    ch.add(A[0],-A[0]*B[0]-F[0]);
 
     for(int j=1; j<n; j++)
     {
-        ll y = -ch.eval(B[j]);
+        ll y = ch.query(B[j]);
         ll delta = F[j] + y;
-        res = max(res, initial - delta);
-        ch.insert_line(A[j],-A[j]*B[j]+F[j]);
+        res = max(res, initial + delta);
+        ch.add(A[j],-A[j]*B[j]-F[j]);
     }
 
     return res;
@@ -80,13 +77,8 @@ int main()
     vector<ll>A(n),B(n);
 
     for(auto&x:A)cin>>x;
-    for(int i=0; i<n; i++)
-        B[i]=i+1;
+    for(auto&x:B)cin>>x;
 
-    ll res = max(solve(A,B), solve(B,A));
-    reverse(A.begin(),A.end());
-    reverse(B.begin(),B.end());
-    res = max({res, solve(A,B), solve(B,A)});
-
+    ll res = max(solve(A,B),solve(B,A));
     cout<<res;
 }
