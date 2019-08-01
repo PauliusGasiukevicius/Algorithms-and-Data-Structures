@@ -1,5 +1,6 @@
 #define ll long long
 
+//a^b^c % m = a^(b^c % m-1) % m for prime m
 ll powm(ll a, ll n, ll mod) //fast, non-recursive
 {
     if(a==0)return 0;
