@@ -66,3 +66,4 @@ Cos theorem: a*a = b*b + c*c - 2*b*c*cosAlpha
 
 Dividing a circle into areas by means of an inscribed polygon with n sides in such a way as to maximise the number of areas created by the edges and diagonals, sometimes called Moser's circle problem, has a solution by an inductive method. The greatest possible number of regions, rG = choose( n, 4 ) + choose( n, 2) + 1, giving the sequence 1, 2, 4, 8, 16, 31, 57, 99, 163, 256
 
+If we have repeating fraction like 0.abc where abc is repeating we can convert to normal fraction easilly: its just abc/999 or just all repeating_digits divided by #count_ofRepeatingDigits nines
