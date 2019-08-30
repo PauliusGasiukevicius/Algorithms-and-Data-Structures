@@ -69,3 +69,81 @@ Dividing a circle into areas by means of an inscribed polygon with n sides in su
 If we have repeating fraction like 0.abc where abc is repeating we can convert to normal fraction easilly: its just abc/999 or just all repeating_digits divided by #count_ofRepeatingDigits nines
 
 if m > 0 && n > 0       a = m*m-n*n,   b = 2*m*n,    c = m*m + n*n     is a Pythagorean triple
+
+
+Towers of hanoi:
+1) Move m − 1 disks from the source to the spare peg
+2) Move the disk m from the source to the target peg,
+3) Move the m − 1 disks that we have just placed on the spare, from the spare to the target peg 
+
+Negatvie number bases:
+Same as positive with division by base, with one tweak: if remainder becomes negative, we gotta increase value by 1 and remainder by base
+
+Monty Hall winning probability (always switching doors):
+ats+=1.0*cows/(cows+cars) * (cars) / (cars+cows-1-open); //Case 1: we select a Cow door
+ats+=1.0*cars/(cows+cars) * (cars-1) / (cars+cows-1-open); //Case 2: we select a Car door
+
+Expected number of stickers to collect all N different stickers,when all 1...N stickershave same probability of appearing:
+ for(int i=1; i<=n; i++)EX+=1.0*n/i;
+
+ Eulers totient function (phi):
+     for(int i=1; i<2000001; i++)phi[i]=i;
+    for(int i=2; i<2000001; i++)if(phi[i]==i)
+    for(int j=i; j<2000001; j+=i)phi[j]-=phi[j]/i;
+
+Inversions in range:
+inv[1] = 1; //Note m must be prime
+for(int i = 2; i < m; ++i)inv[i] = (m - (m/i) * inv[m%i] % m) % m;
+
+
+|-|-|-|-|-|-|-|-|-|-||-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-||-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-||-|-|-|-|-|-|
+Grundy numbers:
+    To calculate the Grundy value of a given state you need to:
+    1)  Get all possible transitions from this state
+    2)  Each transition can lead to a sum of independent games.
+        Calculate the Grundy value for each independent game and xor-sum them.
+    3)  After we calculated Grundy values for each transition we find the state's value as the mex
+        of these numbers.
+
+    If the value is zero, then the current state is losing, otherwise it is winning.
+
+In comparison to the previous section, we take into account the fact that there can be transitions
+ to combined games. We consider them a Nim with pile sizes equal to the independent games' Grundy values.
+ We can xor-sum them just like usual Nim according to Bouton's theorem.
+|-|-|-|-|-|-|-|-|-|-||-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-||-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-||-|-|-|-|-|-|
+
+N-Queens puzzle solution for N > 3  :
+If the remainder from dividing n by 6 is not 2 or 3 then the list is simply all even numbers followed by all odd numbers not greater than N.
+Otherwise, write separate lists of even and odd numbers (i. e. 2, 4, 6, 8 — 1, 3, 5, 7).
+If the remainder is 2, swap 1 and 3 in odd list and move 5 to the end (i. e. 3, 1, 7, 5).
+If the remainder is 3, move 2 to the end of even list and 1,3 to the end of odd list (i. e. 4, 6, 8, 2 — 5, 7, 1, 3).
+Append odd list to the even list and place queens in the rows given by these numbers, from left to right (i. e. a2, b4, c6, d8, e3, f1, g7, h5).
+
+Dearrangements: (permutations such that no element remain in its position)
+D[0]=1;
+for(int i=2; i<=n; i++)D[i]=(i-1)*(D[i-1] + D[i-2]);
+
+//Number of ways to go from (x1,y1) to (x2,y2) only going up/down/diagonal
+for(int d=0; d<=min(x2-x1,y2-y1); d++){
+    int steps = x2-x1+y2-y1;
+    ats = (ats + C(F,inv,x2-x1,d,M)%M * C(F,inv,steps-d,x2-x1,M)%M)%M;}
+
+Random basics:
+mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());//theres also mt19937_64 for 64 bit random integers
+int random_integer = uniform_int_distribution<int>(2, 10)(rng); //generates random ints in range [2,10]
+shuffle(permutation.begin(), permutation.end(), rng); //random_shuffle
+
+ordered set:
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
+using namespace __gnu_pbds;
+typedef tree<int,null_type,less<int>,rb_tree_tag,tree_order_statistics_node_update>ordered_set;
+ordered_set S;
+S.order_of_key(x)
+*S.find_by_order(x-1)
+
+custom set comparator:
+struct comp
+{bool operator() (const double& a, const double& b)const{return b - a > 1e-7;}};
+set<double,comp>S;
+
