@@ -1,3 +1,20 @@
+vector<int> kasai(vector<int>&sa, string&s){ //returns array lcp of size ||s|| - 1, such that lcp[i] is longest common prefix of suffixes sa[i] and sa[i+1]
+    int n = sa.size();
+    vector<int>lcp(n),pos(n);
+    for(int i=0; i<n; i++)pos[sa[i]] = i;
+
+    int k = 0;
+    for(int i=0; i < n - 1; i++){
+        int j = sa[pos[i] - 1];
+
+        while(k+j < n && s[j+k] == s[i+k])k++;
+        lcp[pos[i]] = k;
+        k = (k==0 ? 0 : k-1);
+    }
+    lcp.erase(lcp.begin());
+    return lcp;
+}
+
 vector<int> suffix_array(string &s) //O(n log n)
 {
     s+='$';
