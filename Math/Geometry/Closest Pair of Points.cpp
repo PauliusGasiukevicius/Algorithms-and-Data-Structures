@@ -43,7 +43,7 @@ ld solve(vector<array<ld,2>>&A, int l, int r)
                 });
 
     for(int i=0; i<strip.size(); i++)
-        for(int j=i+1; j<strip.size() && fabs(strip[i][1]-strip[j][1]) < ats; j++)
+        for(int j=i+1; j<min(i+8,(int)strip.size()) && fabs(strip[i][1]-strip[j][1]) < ats; j++)
         ats=min(ats,dist(strip[i][0],strip[i][1],strip[j][0],strip[j][1]));
 
     return ats;
