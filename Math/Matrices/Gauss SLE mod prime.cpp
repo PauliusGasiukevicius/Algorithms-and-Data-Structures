@@ -50,8 +50,8 @@ ll gauss(vector<vector<ll> > &a, ll MOD)
     // for counting rank, take the count of where[i]==-1
     for(int i = 0; i < m; i++)
         if(where[i] != -1) ans[i] = (a[where[i]][m] * inv(a[where[i]][i], MOD)) % MOD;
-		else result = (result * MOD) % mod;
-	// This is validity check probably.May not be needed
+		else result = (result * MOD) % MOD;
+	// This is validity check probably if SLE is solved/solvable
     for(int i = 0; i < n; i++)
 	{
 		ll sum = a[i][m] % MOD;
@@ -61,5 +61,5 @@ ll gauss(vector<vector<ll> > &a, ll MOD)
 		if(sum != 0) return 0;
 	}
 
-	return result;
+	return true;
 }
